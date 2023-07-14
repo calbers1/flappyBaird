@@ -34,7 +34,9 @@
     </noscript>
     <script>
         const gap = 100;
-        const pipeDistance = 150;
+        const pipeDistance = 90;
+        const pipeSpeed = 3;
+        var scoring = false;
         var canvas,
             ctx,
             width,
@@ -42,6 +44,7 @@
             fgpos = 0,
             frames = 0,
             score = 0,
+            radius = 15,
             best = localStorage.getItem( "best" ) || 0,
             currentstate,
             states = {
@@ -55,9 +58,9 @@
                 velocity: 0,
                 animation: [ 0, 1, 2, 1 ],
                 rotation: 0,
-                radius: 15,
-                gravity: .075,
-                _jump: 2.75,
+                radius: radius,
+                gravity: .375,
+                _jump: 5.75,
                 jump: function ()
                 {
                     this.velocity = -this._jump;
@@ -127,7 +130,7 @@
                         var p = this._pipes[ i ];
                         if ( i === 0 )
                         {
-                            // score += p.x <= bird.x ? 1 : 0;
+                            scoring = p.x <= bird.x;
                             var cx = Math.min( Math.max( bird.x, p.x ), p.x + p.width );
                             var cy1 = Math.min( Math.max( bird.y, p.y ), p.y + p.height );
                             var cy2 = Math.min( Math.max( bird.y, p.y + p.height + gap ), p.y + 2 * p.height + gap );
@@ -143,7 +146,7 @@
                             }
                         }
                         //speed of the pipe scroll
-                        p.x -= 1.5;
+                        p.x -= pipeSpeed;
                         if ( p.x < -p.width )
                         {
                             this._pipes.splice( i, 1 );
@@ -189,7 +192,7 @@
                         pipes.reset();
                         currentstate = states.Splash;
                         score = 0;
-                        lastScoreFrame = frames + 300;
+                        lastScoreFrame = 0;
                         console.log( frames, lastScoreFrame );
                     }
                     break;
@@ -236,14 +239,13 @@
             img.src = "sheet.png";
         }
 
-        var desiredFPS = 300;
+        var desiredFPS = 60;
         var millisecondsPerFrame = 1000 / desiredFPS;
 
         function run ()
         {
             var loop = function ()
             {
-
                 setTimeout( function ()
                 {
                     window.requestAnimationFrame( loop, canvas );
@@ -258,7 +260,7 @@
             }, millisecondsPerFrame );
         }
 
-        var lastScoreFrame = 300;
+        var lastScoreFrame = 0;
 
         function update ()
         {
@@ -274,7 +276,7 @@
             if ( currentstate === states.Game )
             {
                 var scoreFrames = pipeDistance;
-                if ( frames - lastScoreFrame >= scoreFrames )
+                if ( scoring && frames - lastScoreFrame >= scoreFrames )
                 {
                     score++;
                     lastScoreFrame = frames;
