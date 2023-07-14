@@ -33,7 +33,7 @@
                 instructions how to enable JavaScript in your web browser</a>.</p>
     </noscript>
     <script>
-        const gap = 120;
+        const gap = 100;
         const pipeDistance = 150;
         var canvas,
             ctx,
@@ -55,7 +55,7 @@
                 velocity: 0,
                 animation: [ 0, 1, 2, 1 ],
                 rotation: 0,
-                radius: 12,
+                radius: 15,
                 gravity: .075,
                 _jump: 2.75,
                 jump: function ()
@@ -127,7 +127,7 @@
                         var p = this._pipes[ i ];
                         if ( i === 0 )
                         {
-                            score += p.x === bird.x ? 1 : 0;
+                            // score += p.x <= bird.x ? 1 : 0;
                             var cx = Math.min( Math.max( bird.x, p.x ), p.x + p.width );
                             var cy1 = Math.min( Math.max( bird.y, p.y ), p.y + p.height );
                             var cy2 = Math.min( Math.max( bird.y, p.y + p.height + gap ), p.y + 2 * p.height + gap );
@@ -189,6 +189,8 @@
                         pipes.reset();
                         currentstate = states.Splash;
                         score = 0;
+                        lastScoreFrame = frames + 300;
+                        console.log( frames, lastScoreFrame );
                     }
                     break;
             }
@@ -245,6 +247,8 @@
             window.requestAnimationFrame( loop, canvas );
         }
 
+        var lastScoreFrame = 300;
+
         function update ()
         {
             frames++;
@@ -258,6 +262,12 @@
             }
             if ( currentstate === states.Game )
             {
+                var scoreFrames = pipeDistance;
+                if ( frames - lastScoreFrame >= scoreFrames )
+                {
+                    score++;
+                    lastScoreFrame = frames;
+                }
                 pipes.update();
             }
             bird.update();
