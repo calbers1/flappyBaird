@@ -212,6 +212,10 @@
                 canvas.style.border = "1px solid #000";
                 evt = "mousedown";
             }
+            if ( height >= 480 )
+            {
+                height = 480;
+            }
             document.addEventListener( evt, onpress );
             canvas.width = width;
             canvas.height = height;
