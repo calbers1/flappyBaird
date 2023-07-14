@@ -236,15 +236,26 @@
             img.src = "sheet.png";
         }
 
+        var desiredFPS = 300;
+        var millisecondsPerFrame = 1000 / desiredFPS;
+
         function run ()
         {
             var loop = function ()
             {
+
+                setTimeout( function ()
+                {
+                    window.requestAnimationFrame( loop, canvas );
+                }, millisecondsPerFrame );
+
                 update();
                 render();
-                window.requestAnimationFrame( loop, canvas );
             };
-            window.requestAnimationFrame( loop, canvas );
+            setTimeout( function ()
+            {
+                window.requestAnimationFrame( loop, canvas );
+            }, millisecondsPerFrame );
         }
 
         var lastScoreFrame = 300;
