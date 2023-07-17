@@ -33,9 +33,9 @@
                 instructions how to enable JavaScript in your web browser</a>.</p>
     </noscript>
     <script>
-        const gap = 100;
-        const pipeDistance = 90;
-        const pipeSpeed = 3;
+        var gap = 100;
+        var pipeDistance = 90;
+        var pipeSpeed = 3;
         var scoring = false;
         var canvas,
             ctx,
@@ -210,6 +210,7 @@
                 width = 320;
                 height = 480;
                 canvas.style.border = "1px solid #000";
+                canvas.style.transform = "scale(1.75)";
                 evt = "mousedown";
             }
             if ( height >= 480 )
@@ -282,6 +283,8 @@
                 var scoreFrames = pipeDistance;
                 if ( scoring && frames - lastScoreFrame >= scoreFrames )
                 {
+                    //make the pipes move faster 
+                    pipeSpeed += 0.05;
                     score++;
                     lastScoreFrame = frames;
                 }
